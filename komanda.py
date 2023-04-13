@@ -130,10 +130,10 @@ class SamplingRNNCell(tf.compat.v1.nn.rnn_cell.RNNCell):
   def __call__(self, inputs, state, scope=None):
     (visual_feats, current_ground_truth) = inputs
     prev_output, prev_state_internal = state
-    context = tf.concat(0, [prev_output, visual_feats])
+    context = tf.concat([prev_output, visual_feats], axis=1)
     new_output_internal, new_state_internal = self.internal_cell(context, prev_state_internal) # here the internal cell (e.g. LSTM) is called
     new_output = tf.compat.v1.estimator.layers.fully_connected(
-        inputs=tf.concat(0, [new_output_internal, prev_output, visual_feats]),
+        inputs=tf.concat([new_output_internal, prev_output, visual_feats], axis=1),
         num_outputs=self._num_outputs,
         activation_fn=None,
         scope="OutputProjection")
