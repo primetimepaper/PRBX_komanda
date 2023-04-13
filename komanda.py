@@ -255,7 +255,7 @@ def do_epoch(session, sequences, mode):
     return (np.sqrt(acc_loss / total_num_steps), valid_predictions) if mode != "test" else (None, test_predictions)
 NUM_EPOCHS=5
 best_validation_score = None
-with tf.compat.v1.Session(graph=graph, config=tf.ConfigProto(gpu_options=gpu_options)) as session:
+with tf.compat.v1.Session(graph=graph, config=tf.compat.v1.ConfigProto(gpu_options=gpu_options)) as session:
     session.run(tf.compat.v1.initialize_all_variables())
     print('Initialized')
     ckpt = tf.train.latest_checkpoint(checkpoint_dir)
