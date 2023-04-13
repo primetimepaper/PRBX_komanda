@@ -179,11 +179,11 @@ with graph.as_default():
     controller_initial_state_variables = get_initial_state(cell_autoregressive.state_size)
     controller_initial_state_autoregressive = deep_copy_initial_state(controller_initial_state_variables)
     controller_initial_state_gt = deep_copy_initial_state(controller_initial_state_variables)
-    with tf.variable_scope("predictor"):
+    with tf.compat.v1.variable_scope("predictor"):
         out_gt, controller_final_state_gt = tf.compat.v1.nn.dynamic_rnn(cell=cell_with_ground_truth, inputs=rnn_inputs_with_ground_truth, 
                           sequence_length=[SEQ_LEN]*BATCH_SIZE, initial_state=controller_initial_state_gt, dtype=tf.float32,
                           swap_memory=True, time_major=False)
-    with tf.variable_scope("predictor", reuse=True):
+    with tf.compat.v1.variable_scope("predictor", reuse=True):
         out_autoregressive, controller_final_state_autoregressive = tf.compat.v1.nn.dynamic_rnn(cell=cell_autoregressive, inputs=rnn_inputs_autoregressive, 
                           sequence_length=[SEQ_LEN]*BATCH_SIZE, initial_state=controller_initial_state_autoregressive, dtype=tf.float32,
                           swap_memory=True, time_major=False)    
