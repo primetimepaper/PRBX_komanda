@@ -198,8 +198,8 @@ with graph.as_default():
     tf.summary.scalar("rmse_gt", tf.math.sqrt(mse_gt))
     tf.summary.scalar("rmse_autoregressive", tf.math.sqrt(mse_autoregressive))    
     summaries = tf.compat.v1.summary.merge_all()
-    train_writer = tf.summary.SummaryWriter('v3/train_summary', graph=graph)
-    valid_writer = tf.summary.SummaryWriter('v3/valid_summary', graph=graph)
+    train_writer = tf.summary.SummaryWriter()
+    valid_writer = tf.summary.SummaryWriter()
     saver = tf.compat.v1.train.Saver(write_version=tf.compat.v1.train.SaverDef.V2)    
 #ANCHOR - 7
 gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=1.0)
