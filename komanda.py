@@ -111,7 +111,7 @@ def apply_vision_simple(image, keep_prob, batch_size, seq_len, scope=None, reuse
         net = tf.nn.dropout(x=net, keep_prob=keep_prob)
         net = slim.fully_connected(net, 128, activation_fn=None)
         return layer_norm(tf.nn.elu(net + aux1 + aux2 + aux3 + aux4)) # aux[1-4] are residual connections (shortcuts)
-class SamplingRNNCell(tf.nn.rnn_cell.RNNCell):
+class SamplingRNNCell(tf.compat.v1.nn.rnn_cell.RNNCell):
   """Simple sampling RNN cell."""
   def __init__(self, num_outputs, use_ground_truth, internal_cell):
     """
