@@ -144,10 +144,11 @@ with graph.as_default():
     learning_rate = tf.placeholder_with_default(input=1e-4, shape=())
     keep_prob = tf.placeholder_with_default(input=1.0, shape=())
     aux_cost_weight = tf.placeholder_with_default(input=0.1, shape=())    
-    inputs = tf.placeholder(shape=(BATCH_SIZE,LEFT_CONTEXT+SEQ_LEN), dtype=tf.string) # pathes to png files from the central camera
+    #inputs = tf.placeholder(shape=(BATCH_SIZE,LEFT_CONTEXT+SEQ_LEN), dtype=tf.string) # pathes to png files from the central camera
+    inputs = '/shared/storage/cs/studentscratch/pb1028/new_venv/PRBX_komanda/images_jpg/'
     targets = tf.placeholder(shape=(BATCH_SIZE,SEQ_LEN,OUTPUT_DIM), dtype=tf.float32) # seq_len x batch_size x OUTPUT_DIM
     targets_normalized = (targets - mean) / std    
-    input_images = tf.pack([tf.image.decode_png(tf.read_file(x)) # tf.io.decode_jpeg(tf.read_file(x)) 
+    input_images = tf.pack([tf.io.decode_jpeg(tf.read_file(x)) #tf.image.decode_png(tf.read_file(x))
                             for x in tf.unpack(tf.reshape(inputs, shape=[(LEFT_CONTEXT+SEQ_LEN) * BATCH_SIZE]))])
     input_images = -1.0 + 2.0 * tf.cast(input_images, tf.float32) / 255.0
     input_images.set_shape([(LEFT_CONTEXT+SEQ_LEN) * BATCH_SIZE, HEIGHT, WIDTH, CHANNELS])
