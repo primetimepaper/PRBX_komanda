@@ -145,7 +145,7 @@ with graph.as_default():
     learning_rate = 1e-4 #tf.placeholder_with_default(input=1e-4, shape=())
     keep_prob = 1.0 #tf.placeholder_with_default(input=1.0, shape=())
     aux_cost_weight = 0.1 #tf.placeholder_with_default(input=0.1, shape=())    
-    inputs = tf.placeholder(shape=(BATCH_SIZE,LEFT_CONTEXT+SEQ_LEN), dtype=tf.string) # pathes to png files from the central camera
+    inputs = tf.compat.v1.placeholder(shape=(BATCH_SIZE,LEFT_CONTEXT+SEQ_LEN), dtype=tf.string) # pathes to png files from the central camera
     #inputs = '/shared/storage/cs/studentscratch/pb1028/new_venv/PRBX_komanda/images_jpg/'
     targets = tf.compat.v1.placeholder(shape=(BATCH_SIZE,SEQ_LEN,OUTPUT_DIM), dtype=tf.float32) # seq_len x batch_size x OUTPUT_DIM
     targets_normalized = (targets - mean) / std    
