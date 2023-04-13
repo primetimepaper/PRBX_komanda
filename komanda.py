@@ -82,7 +82,7 @@ test_seq = read_csv("interpolated_test.csv") # interpolated.csv for testset fill
 #layer_norm = lambda x: tf.compat.v1.estimator.layers.layer_norm(inputs=x, center=True, scale=True, activation_fn=None, trainable=True)
 layer_norm = tf.keras.layers.LayerNormalization(center=True, scale=True, trainable=True)
 def get_optimizer(loss, lrate):
-    optimizer = tf.train.AdamOptimizer(learning_rate=lrate)
+    optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=lrate)
     gradvars = optimizer.compute_gradients(loss)
     gradients, v = zip(*gradvars)
     [print(x.name) for x in v]
@@ -256,7 +256,7 @@ def do_epoch(session, sequences, mode):
 NUM_EPOCHS=5
 best_validation_score = None
 with tf.compat.v1.Session(graph=graph, config=tf.ConfigProto(gpu_options=gpu_options)) as session:
-    session.run(tf.initialize_all_variables())
+    session.run(tf.compat.v1.initialize_all_variables())
     print('Initialized')
     ckpt = tf.train.latest_checkpoint(checkpoint_dir)
     if ckpt:
