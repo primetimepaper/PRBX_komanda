@@ -40,13 +40,13 @@ class BatchGenerator(object):
                     result = self.sequence[idx:] + self.sequence[:self.seq_len - leftover]
                 assert len(result) == self.seq_len
                 self.indices[i] = (idx + self.seq_len) % len(self.sequence)
-                images, targets = zip(*result)
-                images_left_pad, _ = zip(*left_pad)
+                images, targets = list(zip(*result))
+                images_left_pad, _ = list(zip(*left_pad))
                 output.append((np.stack(images_left_pad + images), np.stack(targets)))
-            out = zip(*output)
-            out[0] = np.stack(out[0]) # batch_size x (LEFT_CONTEXT + seq_len)
-            out[1] = np.stack(out[1]) # batch_size x seq_len x OUTPUT_DIM
-            return out
+            output = list(zip(*output))
+            output[0] = np.stack(output[0]) # batch_size x (LEFT_CONTEXT + seq_len)
+            output[1] = np.stack(output[1]) # batch_size x seq_len x OUTPUT_DIM
+            return output
 def read_csv(filename):
     with open(filename, 'r') as f:
         lines = [ln.strip().split(",")[-7:-3] for ln in f.readlines()]
@@ -84,10 +84,10 @@ layer_norm = tf.keras.layers.LayerNormalization(center=True, scale=True, trainab
 def get_optimizer(loss, lrate):
     optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=lrate)
     gradvars = optimizer.compute_gradients(loss)
-    gradients, v = zip(*gradvars)
+    gradients, v = list(zip(*gradvars))
     [print(x.name) for x in v]
     gradients, _ = tf.clip_by_global_norm(gradients, 15.0)
-    return optimizer.apply_gradients(zip(gradients, v))
+    return optimizer.apply_gradients(list(zip(gradients, v)))
 def apply_vision_simple(image, keep_prob, batch_size, seq_len, scope=None, reuse=None):
     video = tf.reshape(image, shape=[batch_size, LEFT_CONTEXT + seq_len, HEIGHT, WIDTH, CHANNELS])
     with tf.compat.v1.variable_scope(scope, 'Vision', [image], reuse=reuse):
