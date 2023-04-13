@@ -2,7 +2,8 @@
 import tensorflow as tf
 import numpy as np
 import os
-slim = tf.contrib.slim
+#slim = tf.contrib.slim
+import tf_slim as slim
 #ANCHOR - 2
 SEQ_LEN = 10 
 BATCH_SIZE = 4 
