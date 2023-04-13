@@ -155,11 +155,11 @@ with graph.as_default():
     input_images.set_shape([(LEFT_CONTEXT+SEQ_LEN) * BATCH_SIZE, HEIGHT, WIDTH, CHANNELS])
     visual_conditions_reshaped = apply_vision_simple(image=input_images, keep_prob=keep_prob, 
                                                      batch_size=BATCH_SIZE, seq_len=SEQ_LEN)
-    visual_conditions = tf.reshape(visual_conditions_reshaped, [BATCH_SIZE, SEQ_LEN, -1])
-    visual_conditions = tf.nn.dropout(x=visual_conditions, keep_prob=keep_prob)    
+    visual_conditions = tf.compat.v1.reshape(visual_conditions_reshaped, [BATCH_SIZE, SEQ_LEN, -1])
+    visual_conditions = tf.compat.v1.nn.dropout(x=visual_conditions, keep_prob=keep_prob)    
     rnn_inputs_with_ground_truth = (visual_conditions, targets_normalized)
     rnn_inputs_autoregressive = (visual_conditions, tf.zeros(shape=(BATCH_SIZE, SEQ_LEN, OUTPUT_DIM), dtype=tf.float32))    
-    internal_cell = tf.nn.rnn_cell.LSTMCell(num_units=RNN_SIZE, num_proj=RNN_PROJ)
+    internal_cell = tf.compat.v1.nn.rnn_cell.LSTMCell(num_units=RNN_SIZE, num_proj=RNN_PROJ)
     cell_with_ground_truth = SamplingRNNCell(num_outputs=OUTPUT_DIM, use_ground_truth=True, internal_cell=internal_cell)
     cell_autoregressive = SamplingRNNCell(num_outputs=OUTPUT_DIM, use_ground_truth=False, internal_cell=internal_cell)    
     def get_initial_state(complex_state_tuple_sizes):
