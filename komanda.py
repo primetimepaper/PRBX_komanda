@@ -147,7 +147,7 @@ with graph.as_default():
     aux_cost_weight = 0.1 #tf.placeholder_with_default(input=0.1, shape=())    
     #inputs = tf.placeholder(shape=(BATCH_SIZE,LEFT_CONTEXT+SEQ_LEN), dtype=tf.string) # pathes to png files from the central camera
     inputs = '/shared/storage/cs/studentscratch/pb1028/new_venv/PRBX_komanda/images_jpg/'
-    targets = tf.placeholder(shape=(BATCH_SIZE,SEQ_LEN,OUTPUT_DIM), dtype=tf.float32) # seq_len x batch_size x OUTPUT_DIM
+    targets = tf.compat.v1.placeholder(shape=(BATCH_SIZE,SEQ_LEN,OUTPUT_DIM), dtype=tf.float32) # seq_len x batch_size x OUTPUT_DIM
     targets_normalized = (targets - mean) / std    
     input_images = tf.pack([tf.io.decode_jpeg(tf.read_file(x)) #tf.image.decode_png(tf.read_file(x))
                             for x in tf.unpack(tf.reshape(inputs, shape=[(LEFT_CONTEXT+SEQ_LEN) * BATCH_SIZE]))])
