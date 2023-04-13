@@ -6,6 +6,7 @@ import os
 import tf_slim as slim
 
 tf.compat.v1.disable_v2_behavior()
+tf.compat.v1.disable_eager_execution()
 
 #ANCHOR - 2
 SEQ_LEN = 10
