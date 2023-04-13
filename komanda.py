@@ -212,7 +212,7 @@ def do_epoch(session, sequences, mode):
     test_predictions = {}
     valid_predictions = {}
     batch_generator = BatchGenerator(sequence=sequences, seq_len=SEQ_LEN, batch_size=BATCH_SIZE)
-    total_num_steps = 1 + (batch_generator.indices[1] - 1) / SEQ_LEN
+    total_num_steps = int(1 + (batch_generator.indices[1] - 1) / SEQ_LEN)
     controller_final_state_gt_cur, controller_final_state_autoregressive_cur = None, None
     acc_loss = np.float128(0.0)
     for step in range(total_num_steps):
