@@ -281,7 +281,7 @@ with tf.Session(graph=graph, config=tf.ConfigProto(gpu_options=gpu_options)) as 
                 _, test_predictions = do_epoch(session=session, sequences=test_seq, mode="test")
                 print >> out, "frame_id,steering_angle"
                 for img, pred in test_predictions.items():
-                    img = img.replace("/shared/storage/cs/studentscratch/pb1028/new_venv/PRBX_komanda/images_jpg/", "")
+                    img = img.replace("/shared/storage/cs/studentscratch/pb1028/new_venv/images1/", "")
                     print >> out, "%s,%f" % (img, pred)
         if epoch != NUM_EPOCHS - 1:
             print("Training")
