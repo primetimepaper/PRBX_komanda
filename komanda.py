@@ -79,7 +79,7 @@ def process_csv(filename, val=5):
 (train_seq, valid_seq), (mean, std) = process_csv(filename="interpolated_train.csv", val=5) # concatenated interpolated.csv from rosbags 
 test_seq = read_csv("interpolated_test.csv") # interpolated.csv for testset filled with dummy values 
 #ANCHOR - 5
-layer_norm = lambda x: tf.contrib.layers.layer_norm(inputs=x, center=True, scale=True, activation_fn=None, trainable=True)
+layer_norm = lambda x: tf.compat.v1.estimator.layers.layer_norm(inputs=x, center=True, scale=True, activation_fn=None, trainable=True)
 def get_optimizer(loss, lrate):
     optimizer = tf.train.AdamOptimizer(learning_rate=lrate)
     gradvars = optimizer.compute_gradients(loss)
@@ -131,7 +131,7 @@ class SamplingRNNCell(tf.compat.v1.nn.rnn_cell.RNNCell):
     prev_output, prev_state_internal = state
     context = tf.concat(1, [prev_output, visual_feats])
     new_output_internal, new_state_internal = self.internal_cell(context, prev_state_internal) # here the internal cell (e.g. LSTM) is called
-    new_output = tf.contrib.layers.fully_connected(
+    new_output = tf.compat.v1.estimator.layers.fully_connected(
         inputs=tf.concat(1, [new_output_internal, prev_output, visual_feats]),
         num_outputs=self._num_outputs,
         activation_fn=None,
