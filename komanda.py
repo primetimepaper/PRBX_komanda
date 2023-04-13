@@ -164,17 +164,17 @@ with graph.as_default():
     cell_with_ground_truth = SamplingRNNCell(num_outputs=OUTPUT_DIM, use_ground_truth=True, internal_cell=internal_cell)
     cell_autoregressive = SamplingRNNCell(num_outputs=OUTPUT_DIM, use_ground_truth=False, internal_cell=internal_cell)    
     def get_initial_state(complex_state_tuple_sizes):
-        flat_sizes = tf.compat.v1.nn.rnn_cell.nest.flatten(complex_state_tuple_sizes)
+        flat_sizes = tf.nest.flatten(complex_state_tuple_sizes)
         init_state_flat = [tf.tile(
             multiples=[BATCH_SIZE, 1], 
             input=tf.get_variable("controller_initial_state_%d" % i, initializer=tf.zeros_initializer, shape=([1, s]), dtype=tf.float32))
          for i,s in enumerate(flat_sizes)]
-        init_state = tf.compat.v1.nn.rnn_cell.nest.pack_sequence_as(complex_state_tuple_sizes, init_state_flat)
+        init_state = tf.nest.pack_sequence_as(complex_state_tuple_sizes, init_state_flat)
         return init_state
     def deep_copy_initial_state(complex_state_tuple):
-        flat_state = tf.compat.v1.nn.rnn_cell.nest.flatten(complex_state_tuple)
+        flat_state = tf.nest.flatten(complex_state_tuple)
         flat_copy = [tf.identity(s) for s in flat_state]
-        deep_copy = tf.compat.v1.nn.rnn_cell.nest.pack_sequence_as(complex_state_tuple, flat_copy)
+        deep_copy = tf.nest.pack_sequence_as(complex_state_tuple, flat_copy)
         return deep_copy    
     controller_initial_state_variables = get_initial_state(cell_autoregressive.state_size)
     controller_initial_state_autoregressive = deep_copy_initial_state(controller_initial_state_variables)
