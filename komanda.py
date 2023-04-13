@@ -234,7 +234,7 @@ def do_epoch(session, sequences, mode):
             train_writer.add_summary(summary, global_train_step)
             global_train_step += 1
         elif mode == "valid":
-            print(model_predictions)
+            print(steering_predictions)
             model_predictions, summary, loss, controller_final_state_autoregressive_cur = \
                 session.run([steering_predictions, summaries, mse_autoregressive_steering, controller_final_state_autoregressive],
                            feed_dict = feed_dict)
