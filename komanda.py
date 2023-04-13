@@ -43,10 +43,10 @@ class BatchGenerator(object):
                 images, targets = zip(*result)
                 images_left_pad, _ = zip(*left_pad)
                 output.append((np.stack(images_left_pad + images), np.stack(targets)))
-            output = zip(*output)
-            output[0] = np.stack(output[0]) # batch_size x (LEFT_CONTEXT + seq_len)
-            output[1] = np.stack(output[1]) # batch_size x seq_len x OUTPUT_DIM
-            return output
+            out = zip(*output)
+            out[0] = np.stack(out[0]) # batch_size x (LEFT_CONTEXT + seq_len)
+            out[1] = np.stack(out[1]) # batch_size x seq_len x OUTPUT_DIM
+            return out
 def read_csv(filename):
     with open(filename, 'r') as f:
         lines = [ln.strip().split(",")[-7:-3] for ln in f.readlines()]
