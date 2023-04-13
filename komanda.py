@@ -188,21 +188,21 @@ with graph.as_default():
         out_autoregressive, controller_final_state_autoregressive = tf.compat.v1.nn.dynamic_rnn(cell=cell_autoregressive, inputs=rnn_inputs_autoregressive, 
                           sequence_length=[SEQ_LEN]*BATCH_SIZE, initial_state=controller_initial_state_autoregressive, dtype=tf.float32,
                           swap_memory=True, time_major=False)    
-    mse_gt = tf.reduce_mean(tf.squared_difference(out_gt, targets_normalized))
-    mse_autoregressive = tf.reduce_mean(tf.squared_difference(out_autoregressive, targets_normalized))
-    mse_autoregressive_steering = tf.reduce_mean(tf.squared_difference(out_autoregressive[:, :, 0], targets_normalized[:, :, 0]))
+    mse_gt = tf.reduce_mean(tf.math.squared_difference(out_gt, targets_normalized))
+    mse_autoregressive = tf.reduce_mean(tf.math.squared_difference(out_autoregressive, targets_normalized))
+    mse_autoregressive_steering = tf.reduce_mean(tf.math.squared_difference(out_autoregressive[:, :, 0], targets_normalized[:, :, 0]))
     steering_predictions = (out_autoregressive[:, :, 0] * std[0]) + mean[0]    
     total_loss = mse_autoregressive_steering + aux_cost_weight * (mse_gt + mse_autoregressive)    
     optimizer = get_optimizer(total_loss, learning_rate)
-    tf.scalar_summary("MAIN TRAIN METRIC: rmse_autoregressive_steering", tf.sqrt(mse_autoregressive_steering))
-    tf.scalar_summary("rmse_gt", tf.sqrt(mse_gt))
-    tf.scalar_summary("rmse_autoregressive", tf.sqrt(mse_autoregressive))    
-    summaries = tf.merge_all_summaries()
-    train_writer = tf.train.SummaryWriter('v3/train_summary', graph=graph)
-    valid_writer = tf.train.SummaryWriter('v3/valid_summary', graph=graph)
-    saver = tf.train.Saver(write_version=tf.train.SaverDef.V2)    
+    tf.summary.scalar("MAIN TRAIN METRIC: rmse_autoregressive_steering", tf.math.sqrt(mse_autoregressive_steering))
+    tf.summary.scalar("rmse_gt", tf.math.sqrt(mse_gt))
+    tf.summary.scalar("rmse_autoregressive", tf.math.sqrt(mse_autoregressive))    
+    summaries = tf.compat.v1.summary.merge_all()
+    train_writer = tf.summary.SummaryWriter('v3/train_summary', graph=graph)
+    valid_writer = tf.summary.SummaryWriter('v3/valid_summary', graph=graph)
+    saver = tf.compat.v1.train.Saver(write_version=tf.compat.v1.train.SaverDef.V2)    
 #ANCHOR - 7
-gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=1.0)
+gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=1.0)
 checkpoint_dir = os.getcwd() + "/v3"
 global_train_step = 0
 global_valid_step = 0
@@ -255,7 +255,7 @@ def do_epoch(session, sequences, mode):
     return (np.sqrt(acc_loss / total_num_steps), valid_predictions) if mode != "test" else (None, test_predictions)
 NUM_EPOCHS=5
 best_validation_score = None
-with tf.Session(graph=graph, config=tf.ConfigProto(gpu_options=gpu_options)) as session:
+with tf.compat.v1.Session(graph=graph, config=tf.ConfigProto(gpu_options=gpu_options)) as session:
     session.run(tf.initialize_all_variables())
     print('Initialized')
     ckpt = tf.train.latest_checkpoint(checkpoint_dir)
