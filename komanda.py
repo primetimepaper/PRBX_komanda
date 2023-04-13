@@ -4,9 +4,9 @@ import numpy as np
 import os
 #slim = tf.contrib.slim
 import tf_slim as slim
-tf.disable_v2_behavior()
+tf.compat.v1.disable_v2_behavior()
 #ANCHOR - 2
-SEQ_LEN = 10 
+SEQ_LEN = 10 ()
 BATCH_SIZE = 4 
 LEFT_CONTEXT = 5
 HEIGHT = 480
