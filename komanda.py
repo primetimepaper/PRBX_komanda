@@ -28,7 +28,7 @@ class BatchGenerator(object):
         while True:
             output = []
             for i in range(self.batch_size):
-                idx = self.indices[i]
+                idx = int(self.indices[i])
                 left_pad = self.sequence[idx - LEFT_CONTEXT:idx]
                 if len(left_pad) < LEFT_CONTEXT:
                     left_pad = [self.sequence[0]] * (LEFT_CONTEXT - len(left_pad)) + left_pad
