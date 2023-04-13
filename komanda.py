@@ -230,11 +230,14 @@ def do_epoch(session, sequences, mode):
             train_writer.add_summary(summary, global_train_step)
             global_train_step += 1
         elif mode == "valid":
+            """
+            result = self._run(None, fetches, feed_dict, options_ptr,run_metadata_ptr)
+            """
             #model_predictions, summary, loss, controller_final_state_autoregressive_cur = \
-            result = \
+            _, tffetches, tffeed_dict, tfoptions_ptr, tfrun_metadata_ptr = \
                 session.run([steering_predictions, summaries, mse_autoregressive_steering, controller_final_state_autoregressive],
                            feed_dict = feed_dict)
-            print(result)
+            print(tffetches)
             valid_writer.add_summary(summary, global_valid_step)
             global_valid_step += 1  
             feed_inputs = feed_inputs[:, LEFT_CONTEXT:].flatten()
