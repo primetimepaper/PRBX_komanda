@@ -149,8 +149,8 @@ with graph.as_default():
     inputs = '/shared/storage/cs/studentscratch/pb1028/new_venv/PRBX_komanda/images_jpg/'
     targets = tf.compat.v1.placeholder(shape=(BATCH_SIZE,SEQ_LEN,OUTPUT_DIM), dtype=tf.float32) # seq_len x batch_size x OUTPUT_DIM
     targets_normalized = (targets - mean) / std    
-    input_images = tf.pack([tf.io.decode_jpeg(tf.read_file(x)) #tf.image.decode_png(tf.read_file(x))
-                            for x in tf.unpack(tf.reshape(inputs, shape=[(LEFT_CONTEXT+SEQ_LEN) * BATCH_SIZE]))])
+    input_images = tf.stack([tf.io.decode_jpeg(tf.read_file(x)) #tf.image.decode_png(tf.read_file(x))
+                            for x in tf.unstack(tf.reshape(inputs, shape=[(LEFT_CONTEXT+SEQ_LEN) * BATCH_SIZE]))])
     input_images = -1.0 + 2.0 * tf.cast(input_images, tf.float32) / 255.0
     input_images.set_shape([(LEFT_CONTEXT+SEQ_LEN) * BATCH_SIZE, HEIGHT, WIDTH, CHANNELS])
     visual_conditions_reshaped = apply_vision_simple(image=input_images, keep_prob=keep_prob, 
@@ -163,27 +163,27 @@ with graph.as_default():
     cell_with_ground_truth = SamplingRNNCell(num_outputs=OUTPUT_DIM, use_ground_truth=True, internal_cell=internal_cell)
     cell_autoregressive = SamplingRNNCell(num_outputs=OUTPUT_DIM, use_ground_truth=False, internal_cell=internal_cell)    
     def get_initial_state(complex_state_tuple_sizes):
-        flat_sizes = tf.nn.rnn_cell.nest.flatten(complex_state_tuple_sizes)
+        flat_sizes = tf.compat.v1.nn.rnn_cell.nest.flatten(complex_state_tuple_sizes)
         init_state_flat = [tf.tile(
             multiples=[BATCH_SIZE, 1], 
             input=tf.get_variable("controller_initial_state_%d" % i, initializer=tf.zeros_initializer, shape=([1, s]), dtype=tf.float32))
          for i,s in enumerate(flat_sizes)]
-        init_state = tf.nn.rnn_cell.nest.pack_sequence_as(complex_state_tuple_sizes, init_state_flat)
+        init_state = tf.compat.v1.nn.rnn_cell.nest.pack_sequence_as(complex_state_tuple_sizes, init_state_flat)
         return init_state
     def deep_copy_initial_state(complex_state_tuple):
-        flat_state = tf.nn.rnn_cell.nest.flatten(complex_state_tuple)
+        flat_state = tf.compat.v1.nn.rnn_cell.nest.flatten(complex_state_tuple)
         flat_copy = [tf.identity(s) for s in flat_state]
-        deep_copy = tf.nn.rnn_cell.nest.pack_sequence_as(complex_state_tuple, flat_copy)
+        deep_copy = tf.compat.v1.nn.rnn_cell.nest.pack_sequence_as(complex_state_tuple, flat_copy)
         return deep_copy    
     controller_initial_state_variables = get_initial_state(cell_autoregressive.state_size)
     controller_initial_state_autoregressive = deep_copy_initial_state(controller_initial_state_variables)
     controller_initial_state_gt = deep_copy_initial_state(controller_initial_state_variables)
     with tf.variable_scope("predictor"):
-        out_gt, controller_final_state_gt = tf.nn.dynamic_rnn(cell=cell_with_ground_truth, inputs=rnn_inputs_with_ground_truth, 
+        out_gt, controller_final_state_gt = tf.compat.v1.nn.dynamic_rnn(cell=cell_with_ground_truth, inputs=rnn_inputs_with_ground_truth, 
                           sequence_length=[SEQ_LEN]*BATCH_SIZE, initial_state=controller_initial_state_gt, dtype=tf.float32,
                           swap_memory=True, time_major=False)
     with tf.variable_scope("predictor", reuse=True):
-        out_autoregressive, controller_final_state_autoregressive = tf.nn.dynamic_rnn(cell=cell_autoregressive, inputs=rnn_inputs_autoregressive, 
+        out_autoregressive, controller_final_state_autoregressive = tf.compat.v1.nn.dynamic_rnn(cell=cell_autoregressive, inputs=rnn_inputs_autoregressive, 
                           sequence_length=[SEQ_LEN]*BATCH_SIZE, initial_state=controller_initial_state_autoregressive, dtype=tf.float32,
                           swap_memory=True, time_major=False)    
     mse_gt = tf.reduce_mean(tf.squared_difference(out_gt, targets_normalized))
