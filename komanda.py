@@ -79,7 +79,8 @@ def process_csv(filename, val=5):
 (train_seq, valid_seq), (mean, std) = process_csv(filename="interpolated_train.csv", val=5) # concatenated interpolated.csv from rosbags 
 test_seq = read_csv("interpolated_test.csv") # interpolated.csv for testset filled with dummy values 
 #ANCHOR - 5
-layer_norm = lambda x: tf.compat.v1.estimator.layers.layer_norm(inputs=x, center=True, scale=True, activation_fn=None, trainable=True)
+#layer_norm = lambda x: tf.compat.v1.estimator.layers.layer_norm(inputs=x, center=True, scale=True, activation_fn=None, trainable=True)
+layer_norm = lambda x: tf.keras.layers.LayerNormalization(inputs=x, center=True, scale=True, activation_fn=None, trainable=True)
 def get_optimizer(loss, lrate):
     optimizer = tf.train.AdamOptimizer(learning_rate=lrate)
     gradvars = optimizer.compute_gradients(loss)
