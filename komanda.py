@@ -165,9 +165,9 @@ with graph.as_default():
     cell_autoregressive = SamplingRNNCell(num_outputs=OUTPUT_DIM, use_ground_truth=False, internal_cell=internal_cell)    
     def get_initial_state(complex_state_tuple_sizes):
         flat_sizes = tf.nest.flatten(complex_state_tuple_sizes)
-        init_state_flat = [tf.tile(
+        init_state_flat = [tf.tile( 
             multiples=[BATCH_SIZE, 1], 
-            input=tf.get_variable("controller_initial_state_%d" % i, initializer=tf.zeros_initializer, shape=([1, s]), dtype=tf.float32))
+            input=tf.compat.v1.get_variable("controller_initial_state_%d" % i, initializer=tf.zeros_initializer, shape=([1, s]), dtype=tf.float32))
          for i,s in enumerate(flat_sizes)]
         init_state = tf.nest.pack_sequence_as(complex_state_tuple_sizes, init_state_flat)
         return init_state
