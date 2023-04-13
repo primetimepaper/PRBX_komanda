@@ -4,6 +4,7 @@ import numpy as np
 import os
 #slim = tf.contrib.slim
 import tf_slim as slim
+tf.disable_v2_behavior()
 #ANCHOR - 2
 SEQ_LEN = 10 
 BATCH_SIZE = 4 
@@ -230,14 +231,9 @@ def do_epoch(session, sequences, mode):
             train_writer.add_summary(summary, global_train_step)
             global_train_step += 1
         elif mode == "valid":
-            """
-            result = self._run(None, fetches, feed_dict, options_ptr,run_metadata_ptr)
-            """
-            #model_predictions, summary, loss, controller_final_state_autoregressive_cur = \
-            _, tffetches, tffeed_dict, tfoptions_ptr, tfrun_metadata_ptr = \
+            model_predictions, summary, loss, controller_final_state_autoregressive_cur = \
                 session.run([steering_predictions, summaries, mse_autoregressive_steering, controller_final_state_autoregressive],
                            feed_dict = feed_dict)
-            print(tffetches)
             valid_writer.add_summary(summary, global_valid_step)
             global_valid_step += 1  
             feed_inputs = feed_inputs[:, LEFT_CONTEXT:].flatten()
