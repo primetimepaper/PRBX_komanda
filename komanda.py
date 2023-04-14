@@ -154,8 +154,9 @@ with graph.as_default():
     inputs = tf.compat.v1.placeholder(shape=(BATCH_SIZE,LEFT_CONTEXT+SEQ_LEN), dtype=tf.string) # pathes to png files from the central camera
     #inputs = '/shared/storage/cs/studentscratch/pb1028/new_venv/PRBX_komanda/images_jpg/'
     targets = tf.compat.v1.placeholder(shape=(BATCH_SIZE,SEQ_LEN,OUTPUT_DIM), dtype=tf.float32) # seq_len x batch_size x OUTPUT_DIM
-    targets_normalized = (targets - mean) / std    
-    input_images = tf.stack([tf.io.decode_jpeg(tf.io.read_file(x)) #tf.image.decode_png(tf.read_file(x))
+    targets_normalized = (targets - mean) / std
+    abs_path = '/shared/storage/cs/studentscratch/pb1028/new_venv/hmb1/'
+    input_images = tf.stack([tf.io.decode_jpeg(tf.io.read_file((abs_path + x))) #tf.image.decode_png(tf.read_file(x))
                             for x in tf.unstack(tf.reshape(inputs, shape=[(LEFT_CONTEXT+SEQ_LEN) * BATCH_SIZE]))])
     input_images = -1.0 + 2.0 * tf.cast(input_images, tf.float32) / 255.0
     input_images.set_shape([(LEFT_CONTEXT+SEQ_LEN) * BATCH_SIZE, HEIGHT, WIDTH, CHANNELS])
