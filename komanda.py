@@ -148,8 +148,8 @@ class SamplingRNNCell(tf.compat.v1.nn.rnn_cell.RNNCell):
 graph = tf.Graph()
 with graph.as_default():
     # inputs  
-    learning_rate = 1e-4 #tf.placeholder_with_default(input=1e-4, shape=())
-    keep_prob = 1.0 #tf.placeholder_with_default(input=1.0, shape=())
+    learning_rate = tf.compat.v1.placeholder_with_default(input=1e-4, shape=())
+    keep_prob = tf.compat.v1.placeholder_with_default(input=1.0, shape=())
     aux_cost_weight = 0.1 #tf.placeholder_with_default(input=0.1, shape=())    
     inputs = tf.compat.v1.placeholder(shape=(BATCH_SIZE,LEFT_CONTEXT+SEQ_LEN), dtype=tf.string) # pathes to png files from the central camera
     #inputs = '/shared/storage/cs/studentscratch/pb1028/new_venv/PRBX_komanda/images_jpg/'
@@ -228,7 +228,6 @@ def do_epoch(session, sequences, mode):
             feed_dict.update({controller_final_state_gt : controller_final_state_gt_cur})
         if mode == "train":
             feed_dict.update({keep_prob : KEEP_PROB_TRAIN})
-            print(feed_dict)
             summary, _, loss, controller_final_state_gt_cur, controller_final_state_autoregressive_cur = \
                 session.run([summaries, optimizer, mse_autoregressive_steering, controller_final_state_gt, controller_final_state_autoregressive],
                            feed_dict = feed_dict)
