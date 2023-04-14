@@ -228,23 +228,13 @@ def do_epoch(session, sequences, mode):
             feed_dict.update({controller_final_state_gt : controller_final_state_gt_cur})
         if mode == "train":
             feed_dict.update({keep_prob : KEEP_PROB_TRAIN})
+            print(feed_dict)
             summary, _, loss, controller_final_state_gt_cur, controller_final_state_autoregressive_cur = \
                 session.run([summaries, optimizer, mse_autoregressive_steering, controller_final_state_gt, controller_final_state_autoregressive],
                            feed_dict = feed_dict)
             train_writer.add_summary(summary, global_train_step)
             global_train_step += 1
         elif mode == "valid":
-            print("\n steering pred")
-            print(steering_predictions)
-            print("\n summaries")
-            print(summaries)
-            print("\n mse")
-            print(mse_autoregressive_steering)
-            print("\n controller")
-            print(controller_final_state_autoregressive)
-            print("\n feed dict")
-            print(feed_dict)
-            print("\n session.run")
             model_predictions, summary, loss, controller_final_state_autoregressive_cur = \
                 session.run([steering_predictions, summaries, mse_autoregressive_steering, controller_final_state_autoregressive],
                            feed_dict = feed_dict)
