@@ -202,8 +202,8 @@ with graph.as_default():
     tf.compat.v1.summary.scalar("rmse_gt", tf.math.sqrt(mse_gt))
     tf.compat.v1.summary.scalar("rmse_autoregressive", tf.math.sqrt(mse_autoregressive))    
     summaries = tf.compat.v1.summary.merge_all()
-    train_writer = tf.summary.FileWriter()
-    valid_writer = tf.summary.FileWriter()
+    train_writer = tf.compat.v1.summary.FileWriter()
+    valid_writer = tf.compat.v1.summary.FileWriter()
     saver = tf.compat.v1.train.Saver(write_version=tf.compat.v1.train.SaverDef.V2)    
 #ANCHOR - 7
 gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=1.0)
