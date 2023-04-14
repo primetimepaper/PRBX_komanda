@@ -7,7 +7,7 @@ import tf_slim as slim
 
 tf.compat.v1.disable_v2_behavior()
 tf.compat.v1.disable_eager_execution()
-
+abs_path = "/shared/storage/cs/studentscratch/pb1028/new_venv/hmb1/"
 #ANCHOR - 2
 SEQ_LEN = 10
 BATCH_SIZE = 4 
@@ -155,7 +155,6 @@ with graph.as_default():
     #inputs = '/shared/storage/cs/studentscratch/pb1028/new_venv/PRBX_komanda/images_jpg/'
     targets = tf.compat.v1.placeholder(shape=(BATCH_SIZE,SEQ_LEN,OUTPUT_DIM), dtype=tf.float32) # seq_len x batch_size x OUTPUT_DIM
     targets_normalized = (targets - mean) / std
-    abs_path = '/shared/storage/cs/studentscratch/pb1028/new_venv/hmb1/'
     input_images = tf.stack([tf.io.decode_jpeg(tf.io.read_file((abs_path + x))) #tf.image.decode_png(tf.read_file(x))
                             for x in tf.unstack(tf.reshape(inputs, shape=[(LEFT_CONTEXT+SEQ_LEN) * BATCH_SIZE]))])
     input_images = -1.0 + 2.0 * tf.cast(input_images, tf.float32) / 255.0
@@ -298,7 +297,7 @@ with tf.compat.v1.Session(graph=graph, config=tf.compat.v1.ConfigProto(gpu_optio
                 _, test_predictions = do_epoch(session=session, sequences=test_seq, mode="test")
                 print >> out, "frame_id,steering_angle"
                 for img, pred in test_predictions.items():
-                    img = img.replace("/shared/storage/cs/studentscratch/pb1028/new_venv/images1/", "")
+                    img = img.replace(abs_path + "test_center/", "")
                     print >> out, "%s,%f" % (img, pred)
         if epoch != NUM_EPOCHS - 1:
             print("Training")
