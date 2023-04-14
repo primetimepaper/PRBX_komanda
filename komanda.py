@@ -198,12 +198,12 @@ with graph.as_default():
     steering_predictions = (out_autoregressive[:, :, 0] * std[0]) + mean[0]    
     total_loss = mse_autoregressive_steering + aux_cost_weight * (mse_gt + mse_autoregressive)    
     optimizer = get_optimizer(total_loss, learning_rate)
-    tf.summary.scalar("MAIN TRAIN METRIC: rmse_autoregressive_steering", tf.math.sqrt(mse_autoregressive_steering))
-    tf.summary.scalar("rmse_gt", tf.math.sqrt(mse_gt))
-    tf.summary.scalar("rmse_autoregressive", tf.math.sqrt(mse_autoregressive))    
+    tf.compat.v1.summary.scalar("MAIN TRAIN METRIC: rmse_autoregressive_steering", tf.math.sqrt(mse_autoregressive_steering))
+    tf.compat.v1.summary.scalar("rmse_gt", tf.math.sqrt(mse_gt))
+    tf.compat.v1.summary.scalar("rmse_autoregressive", tf.math.sqrt(mse_autoregressive))    
     summaries = tf.compat.v1.summary.merge_all()
-    train_writer = tf.summary.SummaryWriter()
-    valid_writer = tf.summary.SummaryWriter()
+    train_writer = tf.summary.FileWriter()
+    valid_writer = tf.summary.FileWriter()
     saver = tf.compat.v1.train.Saver(write_version=tf.compat.v1.train.SaverDef.V2)    
 #ANCHOR - 7
 gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=1.0)
