@@ -95,26 +95,26 @@ def get_optimizer(loss, lrate):
 def apply_vision_simple(image, keep_prob, batch_size, seq_len, scope=None, reuse=None):
     video = tf.reshape(image, shape=[batch_size, LEFT_CONTEXT + seq_len, HEIGHT, WIDTH, CHANNELS])
     with tf.compat.v1.variable_scope(scope, 'Vision', [image], reuse=reuse):
-        net = slim.convolution(video, num_outputs=64, kernel_size=[3,12,12], stride=[1,6,6], padding="VALID")
+        net = slim.convolution(video, num_outputs=32, kernel_size=[3,12,12], stride=[1,6,6], padding="VALID") #128
         net = tf.compat.v1.nn.dropout(x=net, keep_prob=keep_prob)
-        aux1 = slim.fully_connected(tf.reshape(net[:, -seq_len:, :, :, :], [batch_size, seq_len, -1]), 128, activation_fn=None)
+        aux1 = slim.fully_connected(tf.reshape(net[:, -seq_len:, :, :, :], [batch_size, seq_len, -1]), 32, activation_fn=None) #128
         net = slim.convolution(net, num_outputs=64, kernel_size=[2,5,5], stride=[1,2,2], padding="VALID")
         net = tf.compat.v1.nn.dropout(x=net, keep_prob=keep_prob)
-        aux2 = slim.fully_connected(tf.reshape(net[:, -seq_len:, :, :, :], [batch_size, seq_len, -1]), 128, activation_fn=None)        
+        aux2 = slim.fully_connected(tf.reshape(net[:, -seq_len:, :, :, :], [batch_size, seq_len, -1]), 32, activation_fn=None) #128    
         net = slim.convolution(net, num_outputs=64, kernel_size=[2,5,5], stride=[1,1,1], padding="VALID")
         net = tf.compat.v1.nn.dropout(x=net, keep_prob=keep_prob)
-        aux3 = slim.fully_connected(tf.reshape(net[:, -seq_len:, :, :, :], [batch_size, seq_len, -1]), 128, activation_fn=None)        
+        aux3 = slim.fully_connected(tf.reshape(net[:, -seq_len:, :, :, :], [batch_size, seq_len, -1]), 32, activation_fn=None) #128       
         net = slim.convolution(net, num_outputs=64, kernel_size=[2,5,5], stride=[1,1,1], padding="VALID")
         net = tf.compat.v1.nn.dropout(x=net, keep_prob=keep_prob)
         # at this point the tensor 'net' is of shape batch_size x seq_len x ...
-        aux4 = slim.fully_connected(tf.reshape(net, [batch_size, seq_len, -1]), 128, activation_fn=None)        
-        net = slim.fully_connected(tf.reshape(net, [batch_size, seq_len, -1]), 1024, activation_fn=tf.nn.relu)
+        aux4 = slim.fully_connected(tf.reshape(net, [batch_size, seq_len, -1]), 32, activation_fn=None) #128       
+        net = slim.fully_connected(tf.reshape(net, [batch_size, seq_len, -1]), 256, activation_fn=tf.nn.relu) #1024
         net = tf.compat.v1.nn.dropout(x=net, keep_prob=keep_prob)
-        net = slim.fully_connected(net, 512, activation_fn=tf.nn.relu)
+        net = slim.fully_connected(net, 128, activation_fn=tf.nn.relu) #512
         net = tf.compat.v1.nn.dropout(x=net, keep_prob=keep_prob)
-        net = slim.fully_connected(net, 256, activation_fn=tf.nn.relu)
+        net = slim.fully_connected(net, 64, activation_fn=tf.nn.relu) #256
         net = tf.compat.v1.nn.dropout(x=net, keep_prob=keep_prob)
-        net = slim.fully_connected(net, 128, activation_fn=None)
+        net = slim.fully_connected(net, 32, activation_fn=None) #128
         return layer_norm(tf.compat.v1.nn.elu(net + aux1 + aux2 + aux3 + aux4)) # aux[1-4] are residual connections (shortcuts)
 class SamplingRNNCell(tf.compat.v1.nn.rnn_cell.RNNCell):
   """Simple sampling RNN cell."""
