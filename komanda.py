@@ -281,15 +281,23 @@ with tf.compat.v1.Session(graph=graph, config=tf.compat.v1.ConfigProto(gpu_optio
             with open("v3/valid-predictions-epoch%d" % epoch, "w") as out:
                 result = np.float128(0.0)
                 for img, stats in valid_predictions.items():
-                    print >> out, img, stats
+                    #print >> out, img, stats
+                    print(out)
+                    print(img)
+                    print(stats)
                     result += stats[-1]
             print ("Validation unnormalized RMSE:" + str(np.sqrt(result / len(valid_predictions))))
             with open("v3/test-predictions-epoch%d" % epoch, "w") as out:
                 _, test_predictions = do_epoch(session=session, sequences=test_seq, mode="test")
-                print >> out, "frame_id,steering_angle"
+                #print >> out,
+                print(out)
+                print("frame_id,steering_angle")
                 for img, pred in test_predictions.items():
                     img = img.replace(abs_path + "test_center/", "")
-                    print >> out, "%s,%f" % (img, pred)
+                    #print >> out, "%s,%f" % (img, pred)
+                    print(out)
+                    print(img)
+                    print(pred)
         if epoch != NUM_EPOCHS - 1:
             print("Training")
             do_epoch(session=session, sequences=train_seq, mode="train")
