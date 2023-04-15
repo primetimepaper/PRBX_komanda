@@ -4,7 +4,7 @@ import numpy as np
 import os
 #slim = tf.contrib.slim
 import tf_slim as slim
-os.environ["CUDA_VISIBLE_DEVICES"]="-1"
+#os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 tf.compat.v1.disable_v2_behavior()
 tf.compat.v1.disable_eager_execution()
 abs_path = "/shared/storage/cs/studentscratch/pb1028/new_venv/hmb1/"
