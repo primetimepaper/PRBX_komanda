@@ -206,7 +206,8 @@ with graph.as_default():
     valid_writer = tf.compat.v1.summary.FileWriter('v3/valid_summary', graph=graph)
     saver = tf.compat.v1.train.Saver(write_version=tf.compat.v1.train.SaverDef.V2)    
 #ANCHOR - 7
-gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.25)
+#tf.config.gpu.set_per_process_memory_fraction(0.25)
+gpu_options = tf.compat.v1.GPUOptions(allow_growth=True)#per_process_gpu_memory_fraction=0.1)
 checkpoint_dir = os.getcwd() + "/v3"
 global_train_step = 0
 global_valid_step = 0
