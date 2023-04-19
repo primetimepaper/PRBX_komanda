@@ -7,7 +7,8 @@ import tf_slim as slim
 #os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 tf.compat.v1.disable_v2_behavior()
 tf.compat.v1.disable_eager_execution()
-abs_path = "/shared/storage/cs/studentscratch/pb1028/new_venv/hmb1/"
+#abs_path = "C:\\Users\\Pratham B\\Desktop\\UNI_Y3\\PRBX\\github\\hmb1\\" #local
+abs_path = "/shared/storage/cs/studentscratch/pb1028/new_venv/hmb1/"  #gpu
 #ANCHOR - 2
 SEQ_LEN = 5
 BATCH_SIZE = 4 
@@ -152,7 +153,6 @@ with graph.as_default():
     keep_prob = tf.compat.v1.placeholder_with_default(input=1.0, shape=())
     aux_cost_weight = 0.1 #tf.placeholder_with_default(input=0.1, shape=())    
     inputs = tf.compat.v1.placeholder(shape=(BATCH_SIZE,LEFT_CONTEXT+SEQ_LEN), dtype=tf.string) # pathes to png files from the central camera
-    #inputs = '/shared/storage/cs/studentscratch/pb1028/new_venv/PRBX_komanda/images_jpg/'
     targets = tf.compat.v1.placeholder(shape=(BATCH_SIZE,SEQ_LEN,OUTPUT_DIM), dtype=tf.float32) # seq_len x batch_size x OUTPUT_DIM
     targets_normalized = (targets - mean) / std
     input_images = tf.stack([tf.io.decode_jpeg(tf.io.read_file((abs_path + x))) #tf.image.decode_png(tf.read_file(x))
@@ -301,3 +301,10 @@ with tf.compat.v1.Session(graph=graph, config=tf.compat.v1.ConfigProto(gpu_optio
         if epoch != NUM_EPOCHS - 1:
             print("Training")
             do_epoch(session=session, sequences=train_seq, mode="train")
+
+
+"""
+Yes, in addition to doing a restored_keras_model.summary(), you can save the model architecture as a png file using the plot_model API.
+from keras.utils import plot_model
+plot_model(restored_keras_model, to_file='model.png')
+"""
